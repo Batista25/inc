@@ -9,6 +9,10 @@ import UserChangePwd from '@/view/user/changepwd'
 import UserProfile from '@/view/user/profile'
 import MenuList from '@/view/menu/list'
 import Book from '@/view/book/list'
+import Business from '@/view/business/list'
+import BusinessUpLoad from '@/view/business/components/upLoadForm'
+import BusinessView from '@/view/business/businessView'
+import MyBusiness from '@/view/business/myBusiness'
 
 
 // 懒加载方式，当路由被访问的时候才加载对应组件
@@ -55,11 +59,25 @@ let router = new Router({
     {
       path: '/',
       component: Home,
-      name: '图书管理',
+      name: '寻找商机',
       menuShow: true,
       leaf: true, // 只有一个节点
       iconCls: 'fa fa-user', // 图标样式class
       children: [
+        {path: '/businessView', component: BusinessView, name: '商机查询', menuShow: true},
+        {path: '/myBusiness', component: MyBusiness, name: '我的商机', menuShow: true}
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: '商机管理',
+      menuShow: true,
+      leaf: true, // 只有一个节点
+      iconCls: 'fa fa-user', // 图标样式class
+      children: [
+        {path: '/businessList', component: Business, name: '商机列表', menuShow: true},
+        {path: '/businessUpLoad', component: BusinessUpLoad, name: '商机导入', menuShow: true},
         {path: '/book', component: Book, name: '图书列表', menuShow: true}
       ]
     },

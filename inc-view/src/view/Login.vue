@@ -45,7 +45,7 @@ import API from "../api/api_user";
 export default {
   data() {
     return {
-      title: '电子书管理平台',
+      title: '民生银行商机管理平台',
       loading: false,
       account: {
         username: "",

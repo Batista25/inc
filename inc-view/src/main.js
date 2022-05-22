@@ -14,11 +14,13 @@ import { fabric } from 'fabric';
 import 'fabric-customise-controls';//fabric的扩展，用作缩放的图标
 //复制到剪贴板
 import VueClipboard from 'vue-clipboard2'
+import EleImport from 'vue-ele-import'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(fabric);
 Vue.use(VueClipboard)
+Vue.component(EleImport.name, EleImport)
 
 /* eslint-disable no-new */
 new Vue({
