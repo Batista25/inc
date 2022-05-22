@@ -6,7 +6,7 @@ import com.inc.admin.domain.sys.BaseEntity;
  * 
  * 表名：business_details
  * @author tanzibiao
- * @date 2022-05-21 23:27:04
+ * @date 2022-05-23 01:02:50
  */
 public class Business extends BaseEntity {
     /**商机id*/
@@ -41,6 +41,9 @@ public class Business extends BaseEntity {
 
     /**推荐指数*/
     private Object recommendation;
+
+    /**状态*/
+    private Object status;
 
     /**创建时间*/
     private Object createtime;
@@ -225,6 +228,22 @@ public class Business extends BaseEntity {
      */
     public void setRecommendation(Object recommendation) {
         this.recommendation = recommendation;
+    }
+
+    /**
+     * 获取 状态
+     * @return java.lang.Object
+     */
+    public Object getStatus() {
+        return status;
+    }
+
+    /**
+     * 设置 状态
+     * @param status
+     */
+    public void setStatus(Object status) {
+        this.status = status;
     }
 
     /**

@@ -47,4 +47,6 @@ public interface BusinessService {
     int seize(Integer id);
 
     PageInfo<Business>  myBusiness(Business req);
+
+    int submit(Integer id);
 }

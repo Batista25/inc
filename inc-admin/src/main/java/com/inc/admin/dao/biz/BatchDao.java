@@ -1,12 +1,14 @@
 package com.inc.admin.dao.biz;
 
-import static com.inc.admin.dao.biz.BusinessSql.*;
+import static com.inc.admin.dao.biz.BatchSql.*;
 import static org.mybatis.dynamic.sql.SqlBuilder.*;
 
-import com.inc.admin.domain.biz.Business;
+import com.inc.admin.domain.biz.Batch;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import com.inc.admin.domain.sys.RoleDO;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,8 +34,8 @@ import org.mybatis.dynamic.sql.util.SqlProviderAdapter;
 import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
-public interface BusinessDao {
-    BasicColumn[] selectList = BasicColumn.columnList(id, batchid, type, customer, stock, contacts, phone, address, details, score, recommendation, status, createtime, updatetime, owner);
+public interface BatchDao {
+    BasicColumn[] selectList = BasicColumn.columnList(id, details, score, recommendation, status, createtime, updatetime, operator);
 
     /**
      * 查询  数量
@@ -44,7 +46,7 @@ public interface BusinessDao {
     long count(SelectStatementProvider selectStatement);
 
     /**
-     * 删除 
+     * 删除
      * @param deleteStatement
      * @return int
      */
@@ -52,57 +54,50 @@ public interface BusinessDao {
     int delete(DeleteStatementProvider deleteStatement);
 
     /**
-     * 添加 
+     * 添加
      * @param insertStatement
      * @return int
      */
     @InsertProvider(type=SqlProviderAdapter.class, method="insert")
-    int insert(InsertStatementProvider<Business> insertStatement);
+    int insert(InsertStatementProvider<Batch> insertStatement);
 
     /**
-     * 批量添加 
+     * 批量添加
      * @param multipleInsertStatement
      * @return int
      */
     @InsertProvider(type=SqlProviderAdapter.class, method="insertMultiple")
-    int insertMultiple(MultiRowInsertStatementProvider<Business> multipleInsertStatement);
+    int insertMultiple(MultiRowInsertStatementProvider<Batch> multipleInsertStatement);
 
     /**
-     * 查询单条 
+     * 查询单条
      * @param selectStatement
-     * @return java.util.Optional<com.inc.admin.domain.biz.Business>
+     * @return java.util.Optional<com.inc.admin.domain.biz.Batch>
      */
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    @ResultMap("BusinessResult")
-    Optional<Business> selectOne(SelectStatementProvider selectStatement);
+    @ResultMap("BatchResult")
+    Optional<Batch> selectOne(SelectStatementProvider selectStatement);
 
     /**
-     * 查询多条 
+     * 查询多条
      * @param selectStatement
-     * @return java.util.List<com.inc.admin.domain.biz.Business>
+     * @return java.util.List<com.inc.admin.domain.biz.Batch>
      */
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    @Results(id="BusinessResult", value = {
+    @Results(id="BatchResult", value = {
         @Result(column="id", property="id", jdbcType=JdbcType.OTHER, id=true),
-        @Result(column="batchId", property="batchid", jdbcType=JdbcType.OTHER),
-        @Result(column="type", property="type", jdbcType=JdbcType.OTHER),
-        @Result(column="customer", property="customer", jdbcType=JdbcType.OTHER),
-        @Result(column="stock", property="stock", jdbcType=JdbcType.OTHER),
-        @Result(column="contacts", property="contacts", jdbcType=JdbcType.OTHER),
-        @Result(column="phone", property="phone", jdbcType=JdbcType.OTHER),
-        @Result(column="address", property="address", jdbcType=JdbcType.OTHER),
         @Result(column="details", property="details", jdbcType=JdbcType.OTHER),
         @Result(column="score", property="score", jdbcType=JdbcType.OTHER),
         @Result(column="recommendation", property="recommendation", jdbcType=JdbcType.OTHER),
         @Result(column="status", property="status", jdbcType=JdbcType.OTHER),
         @Result(column="createTime", property="createtime", jdbcType=JdbcType.OTHER),
         @Result(column="updateTime", property="updatetime", jdbcType=JdbcType.OTHER),
-        @Result(column="owner", property="owner", jdbcType=JdbcType.OTHER)
+        @Result(column="operator", property="operator", jdbcType=JdbcType.OTHER)
     })
-    List<Business> selectMany(SelectStatementProvider selectStatement);
+    List<Batch> selectMany(SelectStatementProvider selectStatement);
 
     /**
-     * 更新 
+     * 更新
      * @param updateStatement
      * @return int
      */
@@ -114,220 +109,173 @@ public interface BusinessDao {
      * @param completer
      */
     default long count(CountDSLCompleter completer) {
-        return MyBatis3Utils.countFrom(this::count, business, completer);
+        return MyBatis3Utils.countFrom(this::count, batch, completer);
     }
 
     /**
-     * 删除 
+     * 删除
      * @param completer
      */
     default int delete(DeleteDSLCompleter completer) {
-        return MyBatis3Utils.deleteFrom(this::delete, business, completer);
+        return MyBatis3Utils.deleteFrom(this::delete, batch, completer);
     }
 
     /**
-     * 根据主键删除 
+     * 根据主键删除
      */
     default int deleteByPrimaryKey(Object id_) {
-        return delete(c -> 
+        return delete(c ->
             c.where(id, isEqualTo(id_))
         );
     }
 
     /**
-     * 添加 
+     * 添加
      */
-    default int insert(Business record) {
-        return MyBatis3Utils.insert(this::insert, record, business, c ->
+    default int insert(Batch record) {
+        return MyBatis3Utils.insert(this::insert, record, batch, c ->
             c.map(id).toProperty("id")
-            .map(batchid).toProperty("batchid")
-            .map(type).toProperty("type")
-            .map(customer).toProperty("customer")
-            .map(stock).toProperty("stock")
-            .map(contacts).toProperty("contacts")
-            .map(phone).toProperty("phone")
-            .map(address).toProperty("address")
             .map(details).toProperty("details")
             .map(score).toProperty("score")
             .map(recommendation).toProperty("recommendation")
             .map(status).toProperty("status")
             .map(createtime).toProperty("createtime")
             .map(updatetime).toProperty("updatetime")
-            .map(owner).toProperty("owner")
+            .map(operator).toProperty("operator")
         );
     }
 
+    int save(Batch record);
+
     /**
-     * 批量添加 
+     * 批量添加
      */
-    default int insertMultiple(Collection<Business> records) {
-        return MyBatis3Utils.insertMultiple(this::insertMultiple, records, business, c ->
+    default int insertMultiple(Collection<Batch> records) {
+        return MyBatis3Utils.insertMultiple(this::insertMultiple, records, batch, c ->
             c.map(id).toProperty("id")
-            .map(batchid).toProperty("batchid")
-            .map(type).toProperty("type")
-            .map(customer).toProperty("customer")
-            .map(stock).toProperty("stock")
-            .map(contacts).toProperty("contacts")
-            .map(phone).toProperty("phone")
-            .map(address).toProperty("address")
             .map(details).toProperty("details")
             .map(score).toProperty("score")
             .map(recommendation).toProperty("recommendation")
             .map(status).toProperty("status")
             .map(createtime).toProperty("createtime")
             .map(updatetime).toProperty("updatetime")
-            .map(owner).toProperty("owner")
+            .map(operator).toProperty("operator")
         );
     }
 
     /**
-     * 插入值不为空的列 
+     * 插入值不为空的列
      */
-    default int insertSelective(Business record) {
-        return MyBatis3Utils.insert(this::insert, record, business, c ->
+    default int insertSelective(Batch record) {
+        return MyBatis3Utils.insert(this::insert, record, batch, c ->
             c.map(id).toPropertyWhenPresent("id", record::getId)
-            .map(batchid).toPropertyWhenPresent("batchid", record::getBatchid)
-            .map(type).toPropertyWhenPresent("type", record::getType)
-            .map(customer).toPropertyWhenPresent("customer", record::getCustomer)
-            .map(stock).toPropertyWhenPresent("stock", record::getStock)
-            .map(contacts).toPropertyWhenPresent("contacts", record::getContacts)
-            .map(phone).toPropertyWhenPresent("phone", record::getPhone)
-            .map(address).toPropertyWhenPresent("address", record::getAddress)
             .map(details).toPropertyWhenPresent("details", record::getDetails)
             .map(score).toPropertyWhenPresent("score", record::getScore)
             .map(recommendation).toPropertyWhenPresent("recommendation", record::getRecommendation)
             .map(status).toPropertyWhenPresent("status", record::getStatus)
             .map(createtime).toPropertyWhenPresent("createtime", record::getCreatetime)
             .map(updatetime).toPropertyWhenPresent("updatetime", record::getUpdatetime)
-            .map(owner).toPropertyWhenPresent("owner", record::getOwner)
+            .map(operator).toPropertyWhenPresent("operator", record::getOperator)
         );
     }
 
     /**
-     * 查询单条 
+     * 查询单条
      * @param completer
      */
-    default Optional<Business> selectOne(SelectDSLCompleter completer) {
-        return MyBatis3Utils.selectOne(this::selectOne, selectList, business, completer);
+    default Optional<Batch> selectOne(SelectDSLCompleter completer) {
+        return MyBatis3Utils.selectOne(this::selectOne, selectList, batch, completer);
     }
 
     /**
-     * 查询多条 
+     * 查询多条
      * @param completer
      */
-    default List<Business> select(SelectDSLCompleter completer) {
-        return MyBatis3Utils.selectList(this::selectMany, selectList, business, completer);
+    default List<Batch> select(SelectDSLCompleter completer) {
+        return MyBatis3Utils.selectList(this::selectMany, selectList, batch, completer);
     }
 
     /**
-     * 去重查询 
+     * 去重查询
      * @param completer
      */
-    default List<Business> selectDistinct(SelectDSLCompleter completer) {
-        return MyBatis3Utils.selectDistinct(this::selectMany, selectList, business, completer);
+    default List<Batch> selectDistinct(SelectDSLCompleter completer) {
+        return MyBatis3Utils.selectDistinct(this::selectMany, selectList, batch, completer);
     }
 
     /**
-     * 根据主键查询 
+     * 根据主键查询
      */
-    default Optional<Business> selectByPrimaryKey(Object id_) {
+    default Optional<Batch> selectByPrimaryKey(Object id_) {
         return selectOne(c ->
             c.where(id, isEqualTo(id_))
         );
     }
 
     /**
-     * 更新 
+     * 更新
      * @param completer
      */
     default int update(UpdateDSLCompleter completer) {
-        return MyBatis3Utils.update(this::update, business, completer);
+        return MyBatis3Utils.update(this::update, batch, completer);
     }
 
     /**
-     * 更新所有列 
+     * 更新所有列
      */
-    static UpdateDSL<UpdateModel> updateAllColumns(Business record, UpdateDSL<UpdateModel> dsl) {
+    static UpdateDSL<UpdateModel> updateAllColumns(Batch record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalTo(record::getId)
-                .set(batchid).equalTo(record::getBatchid)
-                .set(type).equalTo(record::getType)
-                .set(customer).equalTo(record::getCustomer)
-                .set(stock).equalTo(record::getStock)
-                .set(contacts).equalTo(record::getContacts)
-                .set(phone).equalTo(record::getPhone)
-                .set(address).equalTo(record::getAddress)
                 .set(details).equalTo(record::getDetails)
                 .set(score).equalTo(record::getScore)
                 .set(recommendation).equalTo(record::getRecommendation)
                 .set(status).equalTo(record::getStatus)
                 .set(createtime).equalTo(record::getCreatetime)
                 .set(updatetime).equalTo(record::getUpdatetime)
-                .set(owner).equalTo(record::getOwner);
+                .set(operator).equalTo(record::getOperator);
     }
 
     /**
-     * 更新值不为空的列 
+     * 更新值不为空的列
      */
-    static UpdateDSL<UpdateModel> updateSelectiveColumns(Business record, UpdateDSL<UpdateModel> dsl) {
+    static UpdateDSL<UpdateModel> updateSelectiveColumns(Batch record, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalToWhenPresent(record::getId)
-                .set(batchid).equalToWhenPresent(record::getBatchid)
-                .set(type).equalToWhenPresent(record::getType)
-                .set(customer).equalToWhenPresent(record::getCustomer)
-                .set(stock).equalToWhenPresent(record::getStock)
-                .set(contacts).equalToWhenPresent(record::getContacts)
-                .set(phone).equalToWhenPresent(record::getPhone)
-                .set(address).equalToWhenPresent(record::getAddress)
                 .set(details).equalToWhenPresent(record::getDetails)
                 .set(score).equalToWhenPresent(record::getScore)
                 .set(recommendation).equalToWhenPresent(record::getRecommendation)
                 .set(status).equalToWhenPresent(record::getStatus)
                 .set(createtime).equalToWhenPresent(record::getCreatetime)
                 .set(updatetime).equalToWhenPresent(record::getUpdatetime)
-                .set(owner).equalToWhenPresent(record::getOwner);
+                .set(operator).equalToWhenPresent(record::getOperator);
     }
 
     /**
-     * 根据主键更新 
+     * 根据主键更新
      */
-    default int updateByPrimaryKey(Business record) {
+    default int updateByPrimaryKey(Batch record) {
         return update(c ->
-            c.set(batchid).equalTo(record::getBatchid)
-            .set(type).equalTo(record::getType)
-            .set(customer).equalTo(record::getCustomer)
-            .set(stock).equalTo(record::getStock)
-            .set(contacts).equalTo(record::getContacts)
-            .set(phone).equalTo(record::getPhone)
-            .set(address).equalTo(record::getAddress)
-            .set(details).equalTo(record::getDetails)
+            c.set(details).equalTo(record::getDetails)
             .set(score).equalTo(record::getScore)
             .set(recommendation).equalTo(record::getRecommendation)
             .set(status).equalTo(record::getStatus)
             .set(createtime).equalTo(record::getCreatetime)
             .set(updatetime).equalTo(record::getUpdatetime)
-            .set(owner).equalTo(record::getOwner)
+            .set(operator).equalTo(record::getOperator)
             .where(id, isEqualTo(record::getId))
         );
     }
 
     /**
-     * 根据主键更新值不为空的列 
+     * 根据主键更新值不为空的列
      */
-    default int updateByPrimaryKeySelective(Business record) {
+    default int updateByPrimaryKeySelective(Batch record) {
         return update(c ->
-            c.set(batchid).equalToWhenPresent(record::getBatchid)
-            .set(type).equalToWhenPresent(record::getType)
-            .set(customer).equalToWhenPresent(record::getCustomer)
-            .set(stock).equalToWhenPresent(record::getStock)
-            .set(contacts).equalToWhenPresent(record::getContacts)
-            .set(phone).equalToWhenPresent(record::getPhone)
-            .set(address).equalToWhenPresent(record::getAddress)
-            .set(details).equalToWhenPresent(record::getDetails)
+            c.set(details).equalToWhenPresent(record::getDetails)
             .set(score).equalToWhenPresent(record::getScore)
             .set(recommendation).equalToWhenPresent(record::getRecommendation)
             .set(status).equalToWhenPresent(record::getStatus)
             .set(createtime).equalToWhenPresent(record::getCreatetime)
             .set(updatetime).equalToWhenPresent(record::getUpdatetime)
-            .set(owner).equalToWhenPresent(record::getOwner)
+            .set(operator).equalToWhenPresent(record::getOperator)
             .where(id, isEqualTo(record::getId))
         );
     }

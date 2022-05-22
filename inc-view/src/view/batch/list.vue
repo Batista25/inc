@@ -13,8 +13,8 @@
         <el-form role="form" size="small" id="projectForm" class="form-horizontal details">
           <el-row>
             <el-col :xs="colLayOut.xs" :lg="colLayOut.lg" :sm="colLayOut.sm" :md="colLayOut.md">
-              <el-form-item :label-width="formLabelWidth" label="商机类型:">
-                <el-input size="mini" type="text" v-model="filters.type" clearable>
+              <el-form-item :label-width="formLabelWidth" label="编号:">
+                <el-input size="mini" type="text" v-model="filters.id" clearable>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -41,20 +41,13 @@
       <!--列表-->
       <el-table :data="dataList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
         <el-table-column type="index" width="60"></el-table-column>
-        <el-table-column prop="batchid" label="批次id"></el-table-column>
-        <el-table-column prop="type" label="商机类型（存款、贷款、开户）"></el-table-column>
-        <el-table-column prop="customer" label="客户"></el-table-column>
-        <el-table-column prop="stock" label="是否存量客户（1-是，0-否）"></el-table-column>
-        <el-table-column prop="contacts" label="联系人"></el-table-column>
-        <el-table-column prop="phone" label="联系电话"></el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
-        <el-table-column prop="details" label="商机详情"></el-table-column>
+        <el-table-column prop="details" label="批次详情"></el-table-column>
         <el-table-column prop="score" label="综合评分"></el-table-column>
         <el-table-column prop="recommendation" label="推荐指数"></el-table-column>
         <el-table-column prop="status" label="状态"></el-table-column>
         <el-table-column prop="createtime" label="创建时间"></el-table-column>
         <el-table-column prop="updatetime" label="更新时间"></el-table-column>
-        <el-table-column prop="owner" label="跟进人"></el-table-column>
+        <el-table-column prop="operator" label="操作人"></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
             <addForm :call="search" :data="scope.row" size="mini" title="编辑"/>
@@ -83,7 +76,7 @@
 </template>
 <script>
   import addForm from './components/addForm';
-  import api from '@/api/apiBusiness';
+  import api from '@/api/apiBatch';
   import ShowMore from '@/components/ShowMore';
 
   export default {

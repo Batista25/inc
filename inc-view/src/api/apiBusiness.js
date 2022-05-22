@@ -27,9 +27,14 @@ export default {
     return httpClient('/business/update', {method:'post',data,}, callback);
   },
 
-  //修改
+  //抢占
   seize: (data,callback) => {
     return httpClient('/business/seize', {method:'post',params:data,}, callback);
+  },
+
+  //提交
+  submit: (data,callback) => {
+    return httpClient('/business/submit', {method:'post',params:data,}, callback);
   },
 
   //删除

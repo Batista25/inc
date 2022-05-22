@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.inc.admin.context.FilterContextHandler;
 import com.inc.admin.dao.biz.BusinessDao;
 import com.inc.admin.dao.biz.BusinessSql;
+import com.inc.admin.domain.biz.Batch;
 import com.inc.admin.domain.biz.Business;
 import com.inc.admin.service.biz.BusinessService;
 
@@ -79,8 +80,19 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public int upLoad(List<Business> businessList) {
+        if (businessList.size() < 1) {
+            return 0;
+        }
         int n =0 ;
+//        BatchServiceImpl batchService = new BatchServiceImpl();
+//        Batch batch = new Batch();
+//        batch.setScore(businessList.get(0).getScore());
+//        batch.setRecommendation(businessList.get(0).getRecommendation());
+//        batch.setCreatetime(new Date());
+//        batch.setOperator(Integer.parseInt(FilterContextHandler.getUserID()));
+//        int batchId = batchService.save(batch);
         for (Business business : businessList) {
+//            business.setBatchid(batchId);
             insert(business);
             n++;
         }
@@ -91,6 +103,7 @@ public class BusinessServiceImpl implements BusinessService {
     public int seize(Integer id) {
         Business business = new Business();
         business.setId(id);
+        business.setStatus(1);
         business.setOwner(Integer.parseInt(FilterContextHandler.getUserID()));
         return update(business);
     }
@@ -101,6 +114,14 @@ public class BusinessServiceImpl implements BusinessService {
         req.setOwner(Integer.parseInt(FilterContextHandler.getUserID()));
         SelectDSLCompleter completer = buildCompleter(req);
         return new PageInfo<>(businessDao.select(completer));
+    }
+
+    @Override
+    public int submit(Integer id) {
+        Business business = new Business();
+        business.setId(id);
+        business.setStatus(2);
+        return update(business);
     }
 
     /**

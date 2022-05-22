@@ -40,6 +40,9 @@ public final class BusinessSql {
     /**推荐指数*/
     public static final SqlColumn<Object> recommendation = business.recommendation;
 
+    /**状态*/
+    public static final SqlColumn<Object> status = business.status;
+
     /**创建时间*/
     public static final SqlColumn<Object> createtime = business.createtime;
 
@@ -71,6 +74,8 @@ public final class BusinessSql {
         public final SqlColumn<Object> score = column("score", JDBCType.OTHER);
 
         public final SqlColumn<Object> recommendation = column("recommendation", JDBCType.OTHER);
+
+        public final SqlColumn<Object> status = column("status", JDBCType.OTHER);
 
         public final SqlColumn<Object> createtime = column("createTime", JDBCType.OTHER);
 

@@ -68,6 +68,15 @@ public class BusinessController {
         return R.operate(businessService.seize(id)>0);
     }
 
+
+    /**
+     * 抢占商机
+     */
+    @PostMapping("/submit")
+    public R submit(@Validated @NotNull(message = "编号不能为空") @RequestParam("id") @RequestBody Integer id) {
+        return R.operate(businessService.submit(id)>0);
+    }
+
     /**
      * 删除 信息
      */

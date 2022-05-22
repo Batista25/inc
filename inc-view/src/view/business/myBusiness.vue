@@ -56,7 +56,8 @@
         <el-table-column prop="owner" label="跟进人"></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button type="danger" @click="del(scope.$index,scope.row)" size="mini">提交</el-button>
+            <el-button v-if="scope.row.status == '1'" type="danger" @click="submit(scope.$index,scope.row)" size="mini">提交</el-button>
+            <el-button v-if="scope.row.status == '2'" type="pramary" size="mini">已完成</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -147,15 +148,15 @@
       selsChange(sels) {
         this.sels = sels;
       },
-      //删除
-      del(index, row) {
+      //提交
+      submit(index, row) {
         let that = this;
-        this.$confirm('确认删除该记录吗?', '提示', {type: 'warning'}).then(() => {
+        this.$confirm('确认提交该记录吗?', '提示', {type: 'warning'}).then(() => {
           that.loading = true;
-          api.delete({id:row.id}, (result) => {
+          api.submit({id:row.id}, (result) => {
             that.loading = false;
             if (result && result.code == '0') {
-              that.$message.success({showClose: true, message: '删除成功', duration: 1500});
+              that.$message.success({showClose: true, message: '提交成功', duration: 1500});
               that.search();
             } else {
               that.$message. error({showClose: true, message: result.msg, duration: 2000});
